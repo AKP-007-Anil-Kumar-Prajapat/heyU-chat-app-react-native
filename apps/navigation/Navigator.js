@@ -1,26 +1,47 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, Alert, BackHandler} from 'react-native';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   MessagesScreen,
   GroupsScreen,
   ContactScreen,
   ProfileScreen,
+  PostScreen,
+  HomeScreen,
+  LoginScreen,
+  RegistrationScreen,
 } from '../screens';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {createStackNavigator} from '@react-navigation/stack';
+import {COLORS} from '../constants';
+import Ripple from 'react-native-material-ripple';
+
+const Stack = createStackNavigator();
+
+const StackNavigator = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName={'ExerciseHomeScreen'}
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen />
+      <Stack.Screen />
+    </Stack.Navigator>
+  );
+};
 
 const Tab = createBottomTabNavigator();
 
-const Tabs = () => {
+const BottomTabNavigator = () => {
   return (
-    <Tab.Navigator screenOptions={{tabBarShowLabel: false}}>
+    <Tab.Navigator screenOptions={{tabBarShowLabel: false, headerShown: false}}>
       <Tab.Screen
-        name="MessagesScreen"
+        name="TabMessagesScreen"
         component={MessagesScreen}
         options={{
-          tabBarLabel: 'Message',
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
               name="message-text-outline"
@@ -31,7 +52,7 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="GroupsScreen"
+        name="TabGroupsScreen"
         component={GroupsScreen}
         options={{
           tabBarLabel: 'Message',
@@ -45,7 +66,21 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="ContactScreen"
+        name="Post"
+        component={PostScreen}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <AntDesign
+              name="pluscircle"
+              color={COLORS.richCarmine}
+              size={48}
+              style={{top: -25, justifyContent: 'center', alignItems: 'center'}}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="TabContactScreen"
         component={ContactScreen}
         options={{
           tabBarLabel: 'Message',
@@ -59,7 +94,7 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="ProfileScreen"
+        name="TabProfileScreen"
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Message',
@@ -72,6 +107,6 @@ const Tabs = () => {
   );
 };
 
-export default Tabs;
+export default BottomTabNavigator;
 
 const styles = StyleSheet.create({});
