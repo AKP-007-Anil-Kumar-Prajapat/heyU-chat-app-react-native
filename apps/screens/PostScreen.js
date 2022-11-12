@@ -110,7 +110,7 @@ const PostScreen = () => {
       ListFooterComponent={renderLoader}
       //onEndReached={prev => prev + 1} //Called when all rows have been rendered and the list has been scrolled to within onEndReachedThreshold of the bottom. The native scroll event is provided.
       onEndReached={loadMoreItem}
-      onEndReachedThreshold={0.9} //Threshold in pixels (virtual, not physical) for calling onEndReached.
+      onEndReachedThreshold={0.3} //Threshold in pixels (virtual, not physical) for calling onEndReached.
     />
   );
 };

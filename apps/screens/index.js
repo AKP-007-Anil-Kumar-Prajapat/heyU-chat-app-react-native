@@ -6,6 +6,7 @@ import GroupsScreen from './GroupsScreen';
 import MessagesScreen from './MessagesScreen';
 import ProfileScreen from './ProfileScreen';
 import PostScreen from './PostScreen';
+import ChatScreen from './ChatScreen';
 export {
   LoginScreen,
   RegistrationScreen,
@@ -15,4 +16,5 @@ export {
   ContactScreen,
   ProfileScreen,
   PostScreen,
+  ChatScreen,
 };

@@ -15,40 +15,16 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS, SIZES} from '../constants';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ripple from 'react-native-material-ripple';
 import {FlatList, Swipeable} from 'react-native-gesture-handler';
-// import axios from 'axios';
-// const baseUrl = 'https://reqres.in';
+const axios = require('axios');
 
-// const BASE_URL = 'https://dummyapi.io/data/api';
-// const APP_ID = '636b949f112df413ee8bb24c';
-
-// function User({userObject}) {
-//   return (
-//     <View>
-//       <Image
-//         source={{uri: userObject.avatar}}
-//         style={{width: 128, height: 128, borderRadius: 64}}
-//       />
-//       <Text style={{textAlign: 'center', color: 'white'}}>
-//         {`${userObject.first_name} ${userObject.last_name}`}
-//       </Text>
-//     </View>
-//   );
-// }
-
-// const Item = ({title}) => (
-//   <View style={styles.item}>
-//     <Text style={styles.title}>{title}</Text>
-//   </View>
-// );
-
-const MessagesScreen = () => {
+const MessagesScreen = props => {
   // const [userId, setUserId] = useState(1);
   // const [user, setUser] = useState(null);
   // const [isLoading, setIsLoading] = useState(false);
@@ -133,57 +109,53 @@ const MessagesScreen = () => {
   //   );
   //};
 
-  const [userList, setUserList] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-  const [selectedId, setSelectedId] = useState(null);
+  // const getMovies = async () => {
+  //   try {
+  //     const response = await fetch('https://reqres.in/api/users?page=');
+  //     const json = await response.json();
+  //     setUserList(json.data);
+  //     //  console.log(json.data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     // setLoading(false);
+  //   }
+  // };
 
-  const getMovies = async () => {
-    try {
-      const response = await fetch('https://reqres.in/api/users?page=');
-      const json = await response.json();
-      setUserList(json.data);
-      //  console.log(json.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      // setLoading(false);
-    }
-  };
+  // useEffect(() => {
+  //   getMovies();
+  // }, []);
 
-  useEffect(() => {
-    getMovies();
-  }, []);
+  // const Item = ({item}) => {
+  //   return (
+  //     <View
+  //       style={{
+  //         margin: 10,
+  //       }}>
+  //       <View
+  //         style={{
+  //           marginTop: 10,
+  //           flexDirection: 'row',
+  //         }}>
+  //         <View>
+  //           <Image
+  //             style={{width: 60, height: 60, borderRadius: 30}}
+  //             source={{uri: item.avatar}}
+  //           />
+  //         </View>
+  //         <View>
+  //           <Text style={{margin: 10, marginStart: 20}}>
+  //             {item.first_name + ' ' + item.last_name}
+  //           </Text>
+  //         </View>
+  //       </View>
+  //     </View>
+  //   );
+  // };
 
-  const Item = ({item}) => {
-    return (
-      <View
-        style={{
-          margin: 10,
-        }}>
-        <View
-          style={{
-            marginTop: 10,
-            flexDirection: 'row',
-          }}>
-          <View>
-            <Image
-              style={{width: 60, height: 60, borderRadius: 30}}
-              source={{uri: item.avatar}}
-            />
-          </View>
-          <View>
-            <Text style={{margin: 10, marginStart: 20}}>
-              {item.first_name + ' ' + item.last_name}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  const renderItem = ({item}) => {
-    return <Item item={item} />;
-  };
+  // const renderItem = ({item}) => {
+  //   return <Item item={item} />;
+  // };
   // const renderFlatList = ({item}) => (
   //   <View
   //     style={{
@@ -209,6 +181,71 @@ const MessagesScreen = () => {
   //   </View>
   // );
 
+  const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  /*  //By fetch method pagination implmention
+  const getUsers = () => {
+    console.log('getData');
+    setIsLoading(true);
+    //Service to get the data from the server to render
+    fetch(`https://randomuser.me/api/?page=${currentPage}&results=10&seed=abc`)
+      //Sending the currect offset with get request
+      .then(response => response.json())
+      .then(responseJson => {
+        //Successful response
+        //setUsers(responseJson.results);
+        // console.log(users);
+        setUsers([...users, ...responseJson.results]);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }; */
+
+  /*  //By Using acios-hook pagination method 1 [give error promise injection]
+  const getUsers = () => {
+    console.log('getUsers');
+    setIsLoading(true);
+    axios
+      .get(`https://randomuser.me/api/?page=${currentPage}&results=10&seed=abc`)
+      .then(res => {
+        //setUsers(res.data.results);
+        console.log(res);
+        setUsers([...users, ...res.results]);
+        setIsLoading(false);
+      });
+  };
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => getUsers(), [currentPage]); */
+
+  const baseUrl = 'https://randomuser.me/api';
+  //By Using axios-hook pagination method 2
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    setIsLoading(true);
+    const url = `${baseUrl}/?page=${currentPage}&results=10&seed=abc`;
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get(url, {cancelToken: source.token});
+        setUsers([...users, ...res.data.results]);
+        console.log(res.data.results);
+        setIsLoading(false);
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log('Data fetching cancelled');
+        } else {
+          // Handle error
+        }
+      }
+    };
+    fetchUsers();
+    return () => source.cancel('Data fetching cancelled');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
   const backAction = () => {
     Alert.alert('Hold on!', 'Are you sure you want to go back?', [
       {
@@ -227,6 +264,74 @@ const MessagesScreen = () => {
     return () =>
       BackHandler.removeEventListener('hardwareBackPress', backAction);
   }, []);
+
+  const renderItem = ({item}) => {
+    // const leftSwipe = ({progress, dragX}) => {
+    //   // const scale = dragX.interpolate({
+    //   //   inputRange: [0, 100],
+    //   //   outputRange: [0, 1],
+    //   //   extrapolate: 'clamp',
+    //   // });
+    //   return (
+    //     <TouchableOpacity>
+    //       <View style={styles.deleteBox}>
+    //         <Animated.Text>Delete</Animated.Text>
+    //       </View>
+    //     </TouchableOpacity>
+    //   );
+    // };
+
+    // const rightSwipe = ({progress, dragX}) => {
+    //   // const scale = dragX.interpolate({
+    //   //   inputRange: [0, 100],
+    //   //   outputRange: [0, 1],
+    //   //   extrapolate: 'clamp',
+    //   // });
+    //   return (
+    //     <TouchableOpacity>
+    //       <View style={styles.deleteBox}>
+    //         <Animated.Text>Delete</Animated.Text>
+    //       </View>
+    //     </TouchableOpacity>
+    //   );
+    // };
+
+    return (
+      <TouchableOpacity onPress={() => props.navigation.navigate('ChatScreen')}>
+        <View style={styles.itemWrappersStyle}>
+          <Image
+            style={styles.itemImageStyle}
+            source={{uri: item.picture.medium}}
+          />
+          <View style={styles.contentWrapperStyle}>
+            <Text
+              style={
+                styles.txtNameStyle
+              }>{`${item.name.title} ${item.name.first} ${item.name.last}`}</Text>
+            <Text style={styles.txtNameStyle}>{`${item.email}`}</Text>
+            <Text style={styles.txtNameStyle}>{`${
+              'userName : ' + item.login.username
+            }`}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size="large" color="#aaa" />
+      </View>
+    ) : null;
+  };
+
+  const loadMoreItem = () => {
+    //console.log('load more item');
+    //Increasing the currentPage for the next API call
+    setCurrentPage(currentPage + 1);
+    console.log(currentPage);
+  };
 
   return (
     <SafeAreaView
@@ -308,14 +413,23 @@ const MessagesScreen = () => {
           <AntDesign name="search1" size={25} color={COLORS.richCarmine} />
         </View> */}
       </View>
-      <View style={styles.userList}>
-        <FlatList
+
+      <FlatList
+        data={users}
+        renderItem={renderItem}
+        keyExtractor={item => item.email}
+        ListFooterComponent={renderLoader}
+        //onEndReached={prev => prev + 1} //Called when all rows have been rendered and the list has been scrolled to within onEndReachedThreshold of the bottom. The native scroll event is provided.
+        onEndReached={loadMoreItem}
+        onEndReachedThreshold={0.3} //Threshold in pixels (virtual, not physical) for calling onEndReached.
+      />
+
+      {/* <FlatList
           style={{backgroundColor: COLORS.white}}
           data={userList}
           keyExtractor={(item, index) => String(index)}
           renderItem={renderItem}
-        />
-      </View>
+        /> */}
     </SafeAreaView>
   );
 };
@@ -329,6 +443,63 @@ const styles = StyleSheet.create({
     height: '8%',
     justifyContent: 'space-between',
     backgroundColor: COLORS.white,
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  iconContainer: {
+    margin: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+  userList: {
+    height: '100%',
+  },
+  itemWrappersStyle: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    elevation: 0.1,
+  },
+  itemImageStyle: {
+    width: 60,
+    height: 60,
+    marginRight: 16,
+    borderRadius: 50,
+  },
+  contentWrapperStyle: {
+    justifyContent: 'space-around',
+  },
+  txtNameStyle: {
+    fontSize: 16,
+  },
+  txtEmailStyle: {
+    color: '#777',
+  },
+  loaderStyle: {
+    marginVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteBox: {
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 80,
   },
   // headerText_1: {
   //   fontSize: 25,
@@ -353,16 +524,7 @@ const styles = StyleSheet.create({
   //   justifyContent: 'center',
   //   alignItems: 'center',
   // },
-  header: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  iconContainer: {
-    margin: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
   // button: {
   //   paddingHorizontal: 8,
   //   paddingVertical: 6,
@@ -374,16 +536,4 @@ const styles = StyleSheet.create({
   //   minWidth: '48%',
   //   textAlign: 'center',
   // },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-  userList: {
-    height: '100%',
-  },
 });

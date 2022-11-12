@@ -66,12 +66,12 @@ const LoginScreen = ({navigation}) => {
         <TouchableOpacity
           style={styles.loginBtn}
           onPress={() => navigation.navigate('MessagesScreen')}>
-          <Text style={{color: COLORS.richCarmine, fontSize: 16}}>SIGN UP</Text>
+          <Text style={{color: COLORS.richCarmine, fontSize: 20}}>Login</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => navigation.navigate('RegistrationScreen')}>
-          <Text style={{color: COLORS.white, marginTop: 20}}>
+          <Text style={{fontSize: 18, color: COLORS.white, marginTop: 20}}>
             Already have an account ? Sign In
           </Text>
         </TouchableOpacity>

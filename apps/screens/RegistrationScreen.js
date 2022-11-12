@@ -1,13 +1,14 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/self-closing-comp */
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, SIZES, FONTS} from '../constants';
 import {TextInput} from 'react-native-gesture-handler';
 
-const RegistrationScreen = () => {
+const RegistrationScreen = props => {
   // const [] = useState();
   // const [] = useState();
   // const [] = useState();
@@ -18,32 +19,76 @@ const RegistrationScreen = () => {
         style={{
           flex: 1,
           justifyContent: 'center',
-          alignContent: 'center',
           alignItems: 'center',
+          alignContent: 'center',
         }}>
         <View style={styles.headertext}>
           <Text
             style={{
-              ...FONTS.body1,
+              fontSize: 50,
               color: COLORS.white,
               fontWeight: 'bold',
-              marginBottom: 10,
+              marginBottom: 15,
             }}>
             HeyU
           </Text>
 
-          <Text style={{...FONTS.body4, color: COLORS.white, marginBottom: 5}}>
-            Free Chat app template
+          <Text
+            style={{
+              ...FONTS.body2,
+              color: COLORS.white,
+              marginBottom: 20,
+              fontWeight: 'bold',
+            }}>
+            Register Your HeyU Account
           </Text>
         </View>
 
-        <View styles={styles.inputView}>
+        <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
-            placeholder="Enter Your Name"
-            placeholderTextColor={'white'}
+            placeholder="Enter Your First Name"
+            placeholderTextColor="#FFFFFF"
           />
         </View>
+
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Enter Your Last Name"
+            placeholderTextColor="#FFFFFF"
+          />
+        </View>
+
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Enter Your g-mail id"
+            placeholderTextColor="#FFFFFF"
+          />
+        </View>
+
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Enter Your Password"
+            placeholderTextColor="#FFFFFF"
+            secureTextEntry={true}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => props.navigation.navigate('LoginScreen')}>
+          <Text style={{color: COLORS.richCarmine, fontSize: 16}}>SIGN UP</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('LoginScreen')}>
+          <Text style={{fontSize: 18, color: COLORS.white, marginTop: 20}}>
+            Already have an account ? Login Here
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -69,11 +114,11 @@ const styles = StyleSheet.create({
   },
   headertext: {
     flex: 0.2,
-    alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    width: '80%',
-    height: 10,
+    alignItems: 'center',
+    width: '87%',
+    height: 50,
   },
   inputView: {
     // backgroundColor: '#FFC0CB',
@@ -94,5 +139,22 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
+  loginBtn: {
+    width: '80%',
+    borderRadius: 25,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 30,
+    backgroundColor: COLORS.white,
   },
 });

@@ -12,6 +12,7 @@ import {
   HomeScreen,
   LoginScreen,
   RegistrationScreen,
+  ChatScreen,
 } from '../screens';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -25,10 +26,10 @@ const Stack = createStackNavigator();
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName={'ExerciseHomeScreen'}
+      initialRouteName={'MessageScreen'}
       screenOptions={{headerShown: false}}>
-      <Stack.Screen />
-      <Stack.Screen />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="MessageScreen" component={MessagesScreen} />
     </Stack.Navigator>
   );
 };
@@ -40,7 +41,7 @@ const BottomTabNavigator = () => {
     <Tab.Navigator screenOptions={{tabBarShowLabel: false, headerShown: false}}>
       <Tab.Screen
         name="TabMessagesScreen"
-        component={MessagesScreen}
+        component={StackNavigator}
         options={{
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
